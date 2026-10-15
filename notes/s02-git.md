@@ -55,3 +55,10 @@ Le fichier `.gitignore` permet d'exclure certains fichiers et dossiers du suivi 
 - Créer des commits avec des messages clairs.
 - Vérifier l'historique avant de publier.
 - Ne pas réécrire l'historique après le premier push, sauf consigne explicite.
+## 6. Historique depuis lab-01
+
+Nombre de commits depuis lab-01 : 6
+
+Fichiers modifiés depuis lab-01 : README.md, notes/s02-git.md, resources/views/a-propos.blade.php, routes/web.php, screenshots/s02-a-propos.png
+
+Ce que git tag -n affiche pour lab-01 : lab-01
