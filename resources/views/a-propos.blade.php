@@ -2,7 +2,10 @@
 <x-layout>
     <x-slot:title>À propos - Mini-CMS</x-slot:title>
 
-    <h1 class="text-3xl font-bold">À propos de Mini-CMS</h1>
+    <x-page-header
+    title="À propos de Mini-CMS"
+    subtitle="Présentation du projet et de son auteur."
+/>
 
     <p class="mt-4 text-gray-700">
         Mini-CMS est le projet fil rouge de l'Atelier Framework Côté Serveur (Laravel 13).

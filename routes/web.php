@@ -1,22 +1,16 @@
-
 <?php
 
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-Route::get('/', [PageController::class, 'home'])
-    ->name('home');
-
-Route::get('/a-propos', [PageController::class, 'about'])
-    ->name('about');
-
-Route::get('/heure', [PageController::class, 'time'])
-    ->name('time');
+Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/a-propos', [PageController::class, 'about'])->name('about');
+Route::get('/heure', [PageController::class, 'time'])->name('time');
 
 Route::prefix('posts')->name('posts.')->group(function () {
-    Route::get('/', [PostController::class, 'index'])
-        ->name('index');
+    Route::get('/', [PostController::class, 'index'])->name('index');
 
     Route::get('/archive/{year}', [PostController::class, 'archive'])
         ->whereNumber('year')
@@ -26,3 +20,7 @@ Route::prefix('posts')->name('posts.')->group(function () {
         ->where('slug', '[a-z0-9-]+')
         ->name('show');
 });
+
+Route::get('/dashboard', function () {
+    return Inertia::render('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');

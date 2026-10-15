@@ -1,15 +1,17 @@
-# Mini-CMS — Atelier Framework Côté Serveur
+﻿# Mini-CMS — Atelier Framework Côté Serveur
 
-Projet Laravel réalisé dans le cadre de l'Atelier Framework Côté Serveur.
+Projet Laravel réalisé dans le cadre de l'Atelier Framework Côté Serveur à l'ISET Sidi Bouzid.
 
-## État actuel (tag lab-02)
+## État actuel — Session 04
 
 - Routes nommées pour les pages et les articles.
-- Contrôleurs `PageController` et `PostController`.
+- Contrôleurs PageController et PostController.
 - Articles stockés dans un tableau PHP, sans base de données pour l'instant.
-- Layout Blade `<x-layout>` avec Tailwind chargé par Vite.
-- Page d'accueil, page À propos et page Heure du serveur.
-- Page des articles, détail d'un article et archives par année.
+- Layout Blade réutilisable avec Tailwind CSS et Vite.
+- Composants Blade : navbar, nav-link, post-card, alert et page-header.
+- Pages d'accueil, À propos, Heure du serveur, liste des articles, détail et archives.
+- Navigation basée sur les noms des routes.
+- Utilisation des propriétés et des slots dans les composants Blade.
 
 ## Routes disponibles
 
@@ -22,16 +24,28 @@ Projet Laravel réalisé dans le cadre de l'Atelier Framework Côté Serveur.
 | GET | `/posts/archive/{year}` | `posts.archive` | `PostController@archive` |
 | GET | `/posts/{slug}` | `posts.show` | `PostController@show` |
 
-## Captures d'écran
+## Composants Blade
 
-### Page d'accueil avec le layout
+- `x-layout` : structure commune des pages.
+- `x-navbar` : barre de navigation.
+- `x-nav-link` : lien de navigation avec état actif.
+- `x-post-card` : carte d'un article.
+- `x-alert` : message avec différents styles.
+- `x-page-header` : titre et sous-titre réutilisables.
 
-![Page d'accueil avec le layout](screenshots/s03-accueil.png)
+## Captures d'écran — Session 04
 
-### Liste des articles
+### 1. Page d'accueil
+![Page d'accueil](screenshots/s04-accueil.png)
 
-![Liste des articles](screenshots/s03-articles.png)
+### 2. Liste des articles
+![Liste des articles](screenshots/s04-articles.png)
 
-### Détail d'un article
+### 3. Détail d'un article
+![Détail d'un article](screenshots/s04-article-detail.png)
 
-![Détail d'un article](screenshots/s03-article.png)
+### 4. Page À propos
+![Page À propos](screenshots/s04-a-propos.png)
+
+### 5. Heure du serveur
+![Heure du serveur](screenshots/s04-heure.png)
