@@ -27,46 +27,90 @@ class PostController extends Controller
         ]);
     }
 
-  
-public function create(): View
-{
-    return view('posts.create');
-}
+    public function create(): View
+    {
+        return view('posts.create');
+    }
 
-public function store(Request $request): RedirectResponse
-{
-    $validated = $request->validate([
-        'title' => ['required', 'string', 'max:255'],
-        'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/', 'unique:posts,slug'],
-        'body' => ['required', 'string', 'min:20'],
-        'is_published' => ['nullable', 'boolean'],
-    ]);
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-z0-9-]+$/',
+                'unique:posts,slug',
+            ],
+            'excerpt' => ['nullable', 'string', 'max:255'],
+            'body' => ['required', 'string', 'min:20'],
+            'is_published' => ['nullable', 'boolean'],
+        ]);
 
-    $validated['is_published'] = $request->boolean('is_published');
-    $validated['published_at'] = $validated['is_published'] ? now() : null;
+        $validated['is_published'] = $request->boolean('is_published');
+        $validated['published_at'] = $validated['is_published'] ? now() : null;
 
-    $post = Post::create($validated);
+        $post = Post::create($validated);
 
-    return redirect()->route('posts.show', $post);
-}
+        return redirect()->route('posts.show', $post);
+    }
 
     public function show(Post $post): View
     {
         return view('posts.show', compact('post'));
     }
 
-    public function edit(Post $post)
+    public function edit(Post $post): View
     {
-        //
+        return view('posts.edit', compact('post'));
     }
 
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-z0-9-]+$/',
+                'unique:posts,slug,'.$post->id,
+            ],
+            'excerpt' => ['nullable', 'string', 'max:255'],
+            'body' => ['required', 'string', 'min:20'],
+            'is_published' => ['nullable', 'boolean'],
+        ]);
+
+        $validated['is_published'] = $request->boolean('is_published');
+
+        if ($validated['is_published']) {
+            $validated['published_at'] = $post->published_at ?? now();
+        } else {
+            $validated['published_at'] = null;
+        }
+
+        $post->update($validated);
+
+        return redirect()->route('posts.show', $post)
+            ->with('success', 'Article modifié avec succès.');
     }
 
-    public function destroy(Post $post)
+    public function destroy(Post $post): RedirectResponse
     {
-        //
+        $post->delete();
+
+        return redirect()->route('posts.index')
+            ->with('success', 'Article supprimé avec succès.');
+    }
+
+    public function togglePublication(Post $post): RedirectResponse
+    {
+        $post->is_published = ! $post->is_published;
+        $post->published_at = $post->is_published ? now() : null;
+        $post->save();
+
+        return redirect()->route('posts.show', $post)
+            ->with('success', 'Statut de publication modifié.');
     }
 }

@@ -1,5 +1,11 @@
 <x-layout>
     <x-slot:title>{{ $heading }} - Mini-CMS</x-slot:title>
+    
+<a href="{{ route('posts.create') }}"
+   class="inline-block rounded bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700">
+    + Nouvel article
+</a>
+
 
     <x-page-header :title="$heading" />
 

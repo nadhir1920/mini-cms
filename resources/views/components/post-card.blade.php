@@ -15,7 +15,11 @@
         @endif
     </div>
 
+    @if ($post->excerpt)
+    <p class="text-sm text-gray-600">{{ $post->excerpt }}</p>
+@else
     <p class="text-sm text-gray-600">{{ Str::limit($post->body, 120) }}</p>
+@endif
 
     <p class="text-xs text-gray-500">
         @if ($post->published_at)

@@ -58,6 +58,23 @@
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
+            <div>
+    <label for="excerpt" class="block text-sm font-medium text-gray-700">
+        Extrait (facultatif, 255 caractères au plus)
+    </label>
+
+    <input
+        type="text"
+        id="excerpt"
+        name="excerpt"
+        value="{{ old('excerpt') }}"
+        class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2"
+    >
+
+    @error('excerpt')
+        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+    @enderror
+</div>
 
             <div>
                 <label for="body" class="mb-1 block font-medium text-gray-700">

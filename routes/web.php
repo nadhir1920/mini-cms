@@ -14,9 +14,19 @@ Route::get('/posts/archive/{year}', [PostController::class, 'archive'])
     ->whereNumber('year')
     ->name('posts.archive');
 
-// Liste et détail des articles
+// Gestion des articles
 Route::resource('posts', PostController::class)
-    ->only(['index', 'show', 'create', 'store']);
+    ->only([
+        'index',
+        'show',
+        'create',
+        'store',
+        'edit',
+        'update',
+        'destroy',
+    ]);
+    Route::patch('/posts/{post}/publication', [PostController::class, 'togglePublication'])
+    ->name('posts.publication');
 
 Route::get('/dashboard', function () {
     return Inertia::render('dashboard');
