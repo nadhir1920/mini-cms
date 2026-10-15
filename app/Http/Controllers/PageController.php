@@ -6,7 +6,7 @@ class PageController extends Controller
 {
     public function home()
     {
-        return view('welcome');
+        return view('home');
     }
 
     public function about()
@@ -14,6 +14,14 @@ class PageController extends Controller
         return view('a-propos', [
             'auteur' => 'Nadhir Jlassi',
             'groupe' => 'MDW32',
+        ]);
+    }
+
+    public function time()
+    {
+        return view('heure', [
+            'heure' => now()->format('H:i'),
+            'date' => now()->format('d/m/Y'),
         ]);
     }
 }
