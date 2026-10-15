@@ -21,3 +21,10 @@ Route::get('/bonjour', function () {
 Route::get('/bonjour-court', fn () =>
     'Même résultat, écrit avec une fonction fléchée.'
 );
+
+Route::get('/a-propos', function () {
+    return view('a-propos', [
+        'auteur' => 'Nadhir Jlassi',
+        'groupe' => 'MDW32',
+    ]);
+});
