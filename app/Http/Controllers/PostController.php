@@ -56,22 +56,20 @@ class PostController extends Controller
         return redirect()->route('posts.show', $post);
     }
 
-    
-public function show(Post $post): View
-{
-    $post->load(['user', 'category', 'tags']);
+    public function show(Post $post): View
+    {
+        $post->load(['user', 'category', 'tags']);
 
-    $relatedPosts = Post::query()
-        ->where('is_published', true)
-        ->where('category_id', $post->category_id)
-        ->where('id', '!=', $post->id)
-        ->latest('published_at')
-        ->limit(3)
-        ->get();
+        $relatedPosts = Post::query()
+            ->where('is_published', true)
+            ->where('category_id', $post->category_id)
+            ->where('id', '!=', $post->id)
+            ->latest('published_at')
+            ->limit(3)
+            ->get();
 
-    return view('posts.show', compact('post', 'relatedPosts'));
-}
-
+        return view('posts.show', compact('post', 'relatedPosts'));
+    }
 
     public function edit(Post $post): View
     {

@@ -25,7 +25,7 @@ Route::resource('posts', PostController::class)
         'update',
         'destroy',
     ]);
-    Route::patch('/posts/{post}/publication', [PostController::class, 'togglePublication'])
+Route::patch('/posts/{post}/publication', [PostController::class, 'togglePublication'])
     ->name('posts.publication');
 
 Route::get('/dashboard', function () {

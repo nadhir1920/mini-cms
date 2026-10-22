@@ -75,4 +75,3 @@ it('shows only published posts on the home page', function () {
         ->assertSee('Article publié')
         ->assertDontSee('Article brouillon');
 });
-
