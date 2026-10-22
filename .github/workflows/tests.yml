@@ -34,6 +34,8 @@ jobs:
       - name: Setup Application
         run: composer setup
 
+      - name: Fix formatting
+        run: npm run check:fix
+
       - name: Run CI Checks
         run: composer ci:check
-
