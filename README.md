@@ -67,3 +67,20 @@
 ![Connexion réussie avec le nom de l'utilisateur dans la barre de navigation](screenshots/s11-connexion.png)
 
 ![Page 403 affichée lorsqu'un auteur tente de modifier l'article d'un autre utilisateur](screenshots/s11-interdit.png)
+
+## Comparaison avec le starter kit Livewire
+
+| Critère | Mini-CMS (authentification manuelle) | Starter kit Livewire |
+|---|---|---|
+| Routes d'authentification | `routes/web.php` (`/inscription`, `/connexion`, `/deconnexion`) | Enregistrées par Fortify depuis son paquet ; absentes de `routes/web.php` |
+| Inscription | `app/Http/Controllers/Auth/RegisterController.php` et `resources/views/auth/register.blade.php` | `app/Actions/Fortify/CreateNewUser.php` (`Validator::make`, `User::create`) et `resources/views/pages/auth/register.blade.php` |
+| Connexion | `app/Http/Controllers/Auth/LoginController.php` (`Auth::attempt`, `regenerate()`) et `resources/views/auth/login.blade.php` | Contrôleur de Fortify et `resources/views/pages/auth/login.blade.php` |
+| Déconnexion | `app/Http/Controllers/Auth/LoginController.php` (`destroy` : `logout`, `invalidate`, `regenerateToken`) | Route `logout` de Fortify et `app/Livewire/Actions/Logout.php` |
+| Limitation des tentatives | Aucune | 5 tentatives par minute par e-mail et adresse IP (`app/Providers/FortifyServiceProvider.php`) |
+| Mot de passe oublié | Absent | `Features::resetPasswords()` dans `config/fortify.php` |
+| Vérification de l'e-mail | Absente | `Features::emailVerification()`, `MustVerifyEmail` sur `User`, middleware `verified` sur `/dashboard` |
+| Double authentification | Absente | `Features::twoFactorAuthentication()` et `Features::passkeys()` |
+| Rôles et autorisations | Colonne `role`, `EnsureUserIsAdmin`, Gates (`manage-categories`, `manage-tags`), `PostPolicy` | Aucun : à écrire soi-même (rôles, Gates, Policies, middleware) |
+| Tests | `AuthTest`, `AuthorizationTest`, `AdminAccessTest`, `PostVisibilityTest` (Pest) | 10 fichiers dans `tests/Feature` (`Auth`, `Settings`, `Dashboard`) |
+
+Ce que je garderais du kit dans un vrai projet : je conserverais la limitation des tentatives de connexion, la réinitialisation du mot de passe, la vérification d'e-mail et la double authentification déjà sécurisées par Fortify. En revanche, j'écrirais toujours moi-même les rôles, les middlewares, les Gates et les Policies, car aucun starter kit ne connaît les règles métier d'autorisation de l'application.
