@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -47,8 +48,9 @@ it('returns 404 for an unknown post', function () {
     $this->get('/posts/999')->assertNotFound();
 });
 
-it('shows the create form', function () {
-    $this->get(route('posts.create'))
+it('shows the create form to a logged-in user', function () {
+    $this->actingAs(User::factory()->create())
+        ->get(route('posts.create'))
         ->assertOk()
         ->assertSee('Nouvel article');
 });

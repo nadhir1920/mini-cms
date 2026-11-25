@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -18,7 +19,8 @@ it('shows the styled 404 page for an unknown URL', function () {
 it('shows the styled 503 page when the site is read-only', function () {
     config(['site.read_only' => true]);
 
-    $this->post(route('posts.store'), [])
+    $this->actingAs(User::factory()->create())
+        ->post(route('posts.store'), [])
         ->assertStatus(503)
         ->assertSee('Service momentanément indisponible')
         ->assertSee("Retour à l'accueil", false);

@@ -48,32 +48,36 @@
             {{ $post->body }}
         </div>
 
-        <div class="mt-8 space-y-3">
-            <a href="{{ route('posts.edit', $post) }}"
-               class="block w-fit rounded-md bg-indigo-600 px-4 py-2 text-white">
-                Modifier
-            </a>
+        @can('update', $post)
+            <div class="mt-8 space-y-3">
+                <a href="{{ route('posts.edit', $post) }}"
+                   class="block w-fit rounded-md bg-indigo-600 px-4 py-2 text-white">
+                    Modifier
+                </a>
 
-            <form method="POST" action="{{ route('posts.destroy', $post) }}">
-                @csrf
-                @method('DELETE')
+                @can('delete', $post)
+                    <form method="POST" action="{{ route('posts.destroy', $post) }}">
+                        @csrf
+                        @method('DELETE')
 
-                <button type="submit"
-                        style="background-color: #dc2626; color: white; padding: 8px 16px; border-radius: 6px; font-weight: 600;">
-                    Supprimer
-                </button>
-            </form>
+                        <button type="submit"
+                                style="background-color: #dc2626; color: white; padding: 8px 16px; border-radius: 6px; font-weight: 600;">
+                            Supprimer
+                        </button>
+                    </form>
+                @endcan
 
-            <form method="POST" action="{{ route('posts.publication', $post) }}">
-                @csrf
-                @method('PATCH')
+                <form method="POST" action="{{ route('posts.publication', $post) }}">
+                    @csrf
+                    @method('PATCH')
 
-                <button type="submit"
-                        style="background-color: #0f766e; color: white; padding: 8px 16px; border-radius: 6px;">
-                    {{ $post->is_published ? 'Dépublier' : 'Publier' }}
-                </button>
-            </form>
-        </div>
+                    <button type="submit"
+                            style="background-color: #0f766e; color: white; padding: 8px 16px; border-radius: 6px;">
+                        {{ $post->is_published ? 'Dépublier' : 'Publier' }}
+                    </button>
+                </form>
+            </div>
+        @endcan
     </article>
 
     @if (isset($relatedPosts) && $relatedPosts->isNotEmpty())

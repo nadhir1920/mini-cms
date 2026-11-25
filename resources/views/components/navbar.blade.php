@@ -11,6 +11,27 @@
         <x-nav-link to="posts.index" match="posts.*">Articles</x-nav-link>
         <x-nav-link to="time">Heure</x-nav-link>
         <x-nav-link to="about">À propos</x-nav-link>
+        @can('manage-categories')
+            <x-nav-link to="admin.categories.index" match="admin.categories.*">Catégories</x-nav-link>
+        @endcan
+
+        <div class="ml-auto flex flex-wrap items-center gap-2">
+            @auth
+                <x-nav-link to="my-posts">Mes articles</x-nav-link>
+                <span class="px-2 text-sm text-gray-700">{{ auth()->user()->name }}</span>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
+                        Déconnexion
+                    </button>
+                </form>
+            @endauth
+
+            @guest
+                <x-nav-link to="login">Connexion</x-nav-link>
+                <x-nav-link to="register">Inscription</x-nav-link>
+            @endguest
+        </div>
 
     </nav>
 </header>

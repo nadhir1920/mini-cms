@@ -1,10 +1,10 @@
-﻿## État actuel (tag lab-05b)
+﻿## État actuel (tag lab-06)
 
-- Back-office d'administration pour les catégories et les tags (`/admin/categories`, `/admin/tags`) avec Form Requests et messages flash.
-- Validation traduite en français (`lang/fr/validation.php`, `APP_LOCALE=fr`) et messages personnalisés par Form Request (`messages()`).
-- Toutes les routes d'écriture (articles, catégories, tags) protégées par le middleware `writable`.
-- Pages d'erreur 404, 503, « Article introuvable » et « Catégorie introuvable » intégrées dans le layout du site.
-- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest`, `PostTaxonomyTest`, `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest` et `ErrorPagesTest`.
+- Authentification manuelle (inscription, connexion avec « Se souvenir de moi », déconnexion) via `RegisterController` et `LoginController`, mots de passe hachés (`Hash::make()`), régénération de session.
+- Routes d'écriture et back-office protégés par `auth` ; routes d'inscription/connexion protégées par `guest` ; nouveaux articles rattachés à `$request->user()->posts()`.
+- Rôle utilisateur (`author` par défaut, `admin` pour l'administrateur) via `User::isAdmin()`, Gate `manage-categories` pour `/admin/categories`, et `PostPolicy` (`update`, `delete`).
+- Page « Mes articles » (`/mes-articles`) listant les articles (y compris brouillons) de l'auteur connecté.
+- Tests Pest : `PostPagesTest`, `PostRelationsTest`, `PostTaxonomyTest`, `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest`, `ErrorPagesTest`, `AuthTest` et `AuthorizationTest`.
 
 ## Routes disponibles
 
@@ -17,6 +17,12 @@
 | GET | `/posts/archive/{year}` | `posts.archive` | `PostController@archive` |
 | GET | `/posts/categorie/{category:slug}` | `posts.category` | `PostController@byCategory` |
 | GET | `/posts/tag/{tag:slug}` | `posts.tag` | `PostController@byTag` |
+| GET | `/inscription` | `register` | `RegisterController@create` |
+| POST | `/inscription` | `register.store` | `RegisterController@store` |
+| GET | `/connexion` | `login` | `LoginController@create` |
+| POST | `/connexion` | `login.store` | `LoginController@store` |
+| POST | `/deconnexion` | `logout` | `LoginController@destroy` |
+| GET | `/mes-articles` | `my-posts` | `PostController@myPosts` |
 | GET | `/posts/create` | `posts.create` | `PostController@create` |
 | POST | `/posts` | `posts.store` | `PostController@store` |
 | GET | `/posts/{post}` | `posts.show` | `PostController@show` |
@@ -55,3 +61,9 @@
 ![Erreurs de validation en français sur le formulaire de création de catégorie](screenshots/s10-validation.png)
 
 ![Page 404 personnalisée intégrée dans le layout du site](screenshots/s10-404.png)
+
+### Session 11
+
+![Connexion réussie avec le nom de l'utilisateur dans la barre de navigation](screenshots/s11-connexion.png)
+
+![Page 403 affichée lorsqu'un auteur tente de modifier l'article d'un autre utilisateur](screenshots/s11-interdit.png)
