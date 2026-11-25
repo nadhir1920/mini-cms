@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
 
         Gate::define('manage-categories', fn (User $user) => $user->isAdmin());
+        Gate::define('manage-tags', fn (User $user) => $user->isAdmin());
     }
 
     /**
