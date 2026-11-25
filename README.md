@@ -1,10 +1,11 @@
-﻿## État actuel (tag lab-06)
+﻿## État actuel (tag lab-06b)
 
-- Authentification manuelle (inscription, connexion avec « Se souvenir de moi », déconnexion) via `RegisterController` et `LoginController`, mots de passe hachés (`Hash::make()`), régénération de session.
-- Routes d'écriture et back-office protégés par `auth` ; routes d'inscription/connexion protégées par `guest` ; nouveaux articles rattachés à `$request->user()->posts()`.
-- Rôle utilisateur (`author` par défaut, `admin` pour l'administrateur) via `User::isAdmin()`, Gate `manage-categories` pour `/admin/categories`, et `PostPolicy` (`update`, `delete`).
-- Page « Mes articles » (`/mes-articles`) listant les articles (y compris brouillons) de l'auteur connecté.
-- Tests Pest : `PostPagesTest`, `PostRelationsTest`, `PostTaxonomyTest`, `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest`, `ErrorPagesTest`, `AuthTest` et `AuthorizationTest`.
+- Middleware `admin` (`App\Http\Middleware\EnsureUserIsAdmin`) sur tout `/admin` : un auteur reçoit 403 « Réservé aux administrateurs. ».
+- Gate `manage-tags`, comme `manage-categories` : contrôleur, Form Requests et menu.
+- Brouillons protégés : `PostPolicy::view` et le scope `visibleTo` ; un brouillon n'est visible que par son auteur et les administrateurs.
+- Gestion des rôles (`/admin/utilisateurs`) et `Gate::before` pour les administrateurs (sans contourner l'interdiction de modifier son propre rôle).
+- Tests d'autorisation : `AdminAccessTest` (7 tests), `PostVisibilityTest` (5 tests) et `UserRoleTest` (2 tests), en plus des fichiers de la session 11.
+- Comparaison écrite avec le starter kit Livewire (section ci-dessous).
 
 ## Routes disponibles
 
@@ -42,6 +43,8 @@
 | GET | `/admin/tags/{tag}/edit` | `admin.tags.edit` | `TagController@edit` |
 | PUT | `/admin/tags/{tag}` | `admin.tags.update` | `TagController@update` |
 | DELETE | `/admin/tags/{tag}` | `admin.tags.destroy` | `TagController@destroy` |
+| GET | `/admin/utilisateurs` | `admin.users.index` | `UserController@index` |
+| PATCH | `/admin/utilisateurs/{user}/role` | `admin.users.role` | `UserController@updateRole` |
 
 
 ### Session 08
@@ -67,6 +70,12 @@
 ![Connexion réussie avec le nom de l'utilisateur dans la barre de navigation](screenshots/s11-connexion.png)
 
 ![Page 403 affichée lorsqu'un auteur tente de modifier l'article d'un autre utilisateur](screenshots/s11-interdit.png)
+
+### Session 12
+
+![Page 403 « Réservé aux administrateurs. » pour un compte auteur sur /admin/tags](screenshots/s12-admin-interdit.png)
+
+![Barre de navigation d'un compte auteur, sans les liens Catégories et Tags](screenshots/s12-menu-auteur.png)
 
 ## Comparaison avec le starter kit Livewire
 
