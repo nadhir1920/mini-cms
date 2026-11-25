@@ -3,6 +3,9 @@
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->withoutVite();
@@ -65,7 +68,7 @@ it('refuses a category that does not exist', function () {
 it('lists the published posts of a category by its slug', function () {
     $category = Category::factory()->create(['name' => 'Tutoriels', 'slug' => 'tutoriels']);
     Post::factory()->published()->create(['category_id' => $category->id, 'title' => 'Dans la categorie']);
-    Post::factory()->create(['category_id' => $category->id, 'title' => 'Brouillon de la categorie']);
+    Post::factory()->create(['category_id' => $category->id, 'title' => 'Brouillon de la categorie', 'is_published' => false, 'published_at' => null]);
     Post::factory()->published()->create(['title' => 'Hors categorie']);
 
     $this->get('/posts/categorie/tutoriels')
@@ -82,9 +85,40 @@ it('returns 404 for an unknown category slug', function () {
 it('counts the published posts of each category on the home page', function () {
     $category = Category::factory()->create(['name' => 'Tutoriels']);
     Post::factory(2)->published()->create(['category_id' => $category->id]);
-    Post::factory()->create(['category_id' => $category->id]);
+    Post::factory()->create(['category_id' => $category->id, 'is_published' => false, 'published_at' => null]);
 
     $this->get(route('home'))
         ->assertOk()
         ->assertSee('Tutoriels (2)');
+});
+
+it('lists the published posts of a tag by its slug', function () {
+    $tag = Tag::factory()->create(['name' => 'Astuce', 'slug' => 'astuce']);
+    $published = Post::factory()->published()->create(['title' => 'Astuce publiee']);
+    $draft = Post::factory()->create(['title' => 'Astuce en brouillon', 'is_published' => false, 'published_at' => null]);
+    $published->tags()->attach($tag);
+    $draft->tags()->attach($tag);
+    Post::factory()->published()->create(['title' => 'Sans ce tag']);
+
+    $this->get('/posts/tag/astuce')
+        ->assertOk()
+        ->assertSee('Astuce publiee')
+        ->assertDontSee('Astuce en brouillon')
+        ->assertDontSee('Sans ce tag');
+});
+
+it('returns 404 for an unknown tag slug', function () {
+    $this->get('/posts/tag/inconnu')->assertNotFound();
+});
+
+it('shows only the tags that have published posts on the home page', function () {
+    $popular = Tag::factory()->create(['name' => 'Populaire']);
+    $hidden = Tag::factory()->create(['name' => 'Invisible']);
+    Post::factory(2)->published()->create()->each(fn (Post $post) => $post->tags()->attach($popular));
+    Post::factory()->create(['is_published' => false, 'published_at' => null])->tags()->attach($hidden);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('Populaire (2)')
+        ->assertDontSee('Invisible');
 });

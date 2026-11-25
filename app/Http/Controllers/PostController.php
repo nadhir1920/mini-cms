@@ -41,6 +41,18 @@ class PostController extends Controller
         ]);
     }
 
+    public function byTag(Tag $tag): View
+    {
+        return view('posts.index', [
+            'heading' => 'Tag : '.$tag->name,
+            'posts' => $tag->posts()
+                ->published()
+                ->with('user', 'category', 'tags')
+                ->latest('published_at')
+                ->paginate(4),
+        ]);
+    }
+
     public function create(): View
     {
         return view('posts.create', [
@@ -85,7 +97,10 @@ class PostController extends Controller
                 ->get()
             : collect();
 
-        return view('posts.show', compact('post', 'related'));
+        return view('posts.show', [
+            'post' => $post,
+            'relatedPosts' => $related,
+        ]);
     }
 
     public function edit(Post $post): View

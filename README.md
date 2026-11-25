@@ -1,17 +1,9 @@
-﻿# Mini-CMS — Atelier Framework Côté Serveur
+﻿## État actuel (tag lab-04b)
 
-Projet Laravel réalisé dans le cadre de l'Atelier Framework Côté Serveur à l'ISET Sidi Bouzid.
-
-## État actuel — Session 04
-
-- Routes nommées pour les pages et les articles.
-- Contrôleurs PageController et PostController.
-- Articles stockés dans un tableau PHP, sans base de données pour l'instant.
-- Layout Blade réutilisable avec Tailwind CSS et Vite.
-- Composants Blade : navbar, nav-link, post-card, alert et page-header.
-- Pages d'accueil, À propos, Heure du serveur, liste des articles, détail et archives.
-- Navigation basée sur les noms des routes.
-- Utilisation des propriétés et des slots dans les composants Blade.
+- Formulaires d'article : catégorie (liste déroulante) et tags (cases à cocher, synchronisés avec `sync()`).
+- Pages publiques par catégorie et par tag, liées par slug (`{category:slug}`, `{tag:slug}`).
+- Accueil : catégories et tags populaires comptés avec `withCount`, articles publiés seulement.
+- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest` et `PostTaxonomyTest`.
 
 ## Routes disponibles
 
@@ -22,30 +14,19 @@ Projet Laravel réalisé dans le cadre de l'Atelier Framework Côté Serveur à 
 | GET | `/heure` | `time` | `PageController@time` |
 | GET | `/posts` | `posts.index` | `PostController@index` |
 | GET | `/posts/archive/{year}` | `posts.archive` | `PostController@archive` |
-| GET | `/posts/{slug}` | `posts.show` | `PostController@show` |
+| GET | `/posts/categorie/{category:slug}` | `posts.category` | `PostController@byCategory` |
+| GET | `/posts/tag/{tag:slug}` | `posts.tag` | `PostController@byTag` |
+| GET | `/posts/create` | `posts.create` | `PostController@create` |
+| POST | `/posts` | `posts.store` | `PostController@store` |
+| GET | `/posts/{post}` | `posts.show` | `PostController@show` |
+| GET | `/posts/{post}/edit` | `posts.edit` | `PostController@edit` |
+| PUT | `/posts/{post}` | `posts.update` | `PostController@update` |
+| DELETE | `/posts/{post}` | `posts.destroy` | `PostController@destroy` |
+| PATCH | `/posts/{post}/publication` | `posts.publication` | `PostController@togglePublication` |
 
-## Composants Blade
 
-- `x-layout` : structure commune des pages.
-- `x-navbar` : barre de navigation.
-- `x-nav-link` : lien de navigation avec état actif.
-- `x-post-card` : carte d'un article.
-- `x-alert` : message avec différents styles.
-- `x-page-header` : titre et sous-titre réutilisables.
+### Session 08
 
-## Captures d'écran — Session 04
+![Formulaire de modification avec la catégorie et les tags](screenshots/s08-formulaire-relations.png)
 
-### 1. Page d'accueil
-![Page d'accueil](screenshots/s04-accueil.png)
-
-### 2. Liste des articles
-![Liste des articles](screenshots/s04-articles.png)
-
-### 3. Détail d'un article
-![Détail d'un article](screenshots/s04-article-detail.png)
-
-### 4. Page À propos
-![Page À propos](screenshots/s04-a-propos.png)
-
-### 5. Heure du serveur
-![Heure du serveur](screenshots/s04-heure.png)
+![Page des articles d'une catégorie](screenshots/s08-page-categorie.png)
